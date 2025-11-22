@@ -10,4 +10,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # VITE_GOOGLE_CLIENT_ID should be set in Render dashboard Environment tab
+      # It will be automatically passed as build argument to Docker
 

@@ -3,6 +3,10 @@ FROM node:14-alpine AS builder
 
 WORKDIR /app
 
+# Accept build arguments for environment variables
+ARG VITE_GOOGLE_CLIENT_ID
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+
 # Copy package files
 COPY package*.json ./
 
@@ -12,7 +16,7 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application (Vite will use the env var)
 RUN npm run build
 
 # Production stage
