@@ -16,8 +16,13 @@ A web application for declaring and tracking working hours for employees (Meline
 
 ### Prerequisites
 
+**For local development:**
 - Node.js 14.15.3 or higher
 - npm
+
+**For Docker:**
+- Docker
+- Docker Compose (optional, but recommended)
 
 ### Installation
 
@@ -40,6 +45,47 @@ npm run build
 ```
 
 The built files will be in the `dist` directory.
+
+## Running with Docker
+
+### Using Docker Compose (Recommended)
+
+1. Build and start the container:
+```bash
+docker-compose up -d
+```
+
+2. Access the application at `http://localhost:3000`
+
+3. Stop the container:
+```bash
+docker-compose down
+```
+
+4. Rebuild after code changes:
+```bash
+docker-compose up -d --build
+```
+
+### Using Docker directly
+
+1. Build the Docker image:
+```bash
+docker build -t hours-declaration .
+```
+
+2. Run the container:
+```bash
+docker run -d -p 3000:80 --name hours-declaration hours-declaration
+```
+
+3. Access the application at `http://localhost:3000`
+
+4. Stop the container:
+```bash
+docker stop hours-declaration
+docker rm hours-declaration
+```
 
 ## Usage
 
