@@ -2,11 +2,18 @@ import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { saveData, loadData, exportData, importData } from './dataStorage'
 import HoursVisualization from './HoursVisualization'
+import { useAuth } from './auth/AuthContext'
+import Login from './auth/Login'
+import Signup from './auth/Signup'
+import AccountManagement from './auth/AccountManagement'
 
 const EMPLOYEES = ['Meline', 'Cel']
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 function App() {
+  const { user, loading } = useAuth()
+  const [authView, setAuthView] = useState('login') // 'login' or 'signup'
+  const [showAccount, setShowAccount] = useState(false)
   const [selectedEmployee, setSelectedEmployee] = useState(null)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(null)
@@ -15,20 +22,24 @@ function App() {
   const [currentView, setCurrentView] = useState('calendar') // 'calendar' or 'visualization'
   const fileInputRef = useRef(null)
 
-  // Load data on mount
+  // Load data on mount and when user changes
   useEffect(() => {
-    const data = loadData()
-    if (data) {
-      setHoursData(data)
+    if (user) {
+      const data = loadData(user.email)
+      if (data) {
+        setHoursData(data)
+      }
+    } else {
+      setHoursData({})
     }
-  }, [])
+  }, [user])
 
   // Save data whenever it changes
   useEffect(() => {
-    if (Object.keys(hoursData).length > 0) {
-      saveData(hoursData)
+    if (user && Object.keys(hoursData).length > 0) {
+      saveData(hoursData, user.email)
     }
-  }, [hoursData])
+  }, [hoursData, user])
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear()
@@ -128,13 +139,15 @@ function App() {
   }
 
   const handleExport = () => {
-    exportData()
+    if (user) {
+      exportData(user.email)
+    }
   }
 
   const handleImport = (event) => {
     const file = event.target.files[0]
-    if (file) {
-      importData(file)
+    if (file && user) {
+      importData(file, user.email)
         .then(data => {
           setHoursData(data)
           alert('Data imported successfully!')
@@ -151,11 +164,65 @@ function App() {
   const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })
   const days = getDaysInMonth(currentDate)
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="app">
+        <div className="header">
+          <h1>Loading...</h1>
+        </div>
+      </div>
+    )
+  }
+
+  // Show authentication pages if not logged in
+  if (!user) {
+    if (authView === 'login') {
+      return <Login onSwitchToSignup={() => setAuthView('signup')} />
+    }
+    return <Signup onSwitchToLogin={() => setAuthView('login')} />
+  }
+
+  // Show account management if requested
+  if (showAccount) {
+    return (
+      <>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <button
+            className="save-button"
+            onClick={() => setShowAccount(false)}
+            style={{ background: '#667eea' }}
+          >
+            ← Back to App
+          </button>
+        </div>
+        <AccountManagement />
+      </>
+    )
+  }
+
+  // Main app content
   return (
     <div className="app">
       <div className="header">
-        <h1>Hours Declaration</h1>
-        <p>Track working hours for your employees</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <div>
+            <h1>Hours Declaration</h1>
+            <p>Track working hours for your employees</p>
+          </div>
+          <div className="user-menu">
+            <div className="user-info">
+              <span className="user-name">{user.name}</span>
+              <button
+                className="account-button"
+                onClick={() => setShowAccount(true)}
+                title="Account Settings"
+              >
+                ⚙️ Account
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="employee-selector">

@@ -1,12 +1,15 @@
 // Data storage utility for saving and loading hours data
 // Uses localStorage for browser storage and provides file export/import
 
-const STORAGE_KEY = 'hoursDeclarationData'
+const getStorageKey = (userEmail) => {
+  return userEmail ? `hoursDeclarationData_${userEmail}` : 'hoursDeclarationData'
+}
 
-export const saveData = (data) => {
+export const saveData = (data, userEmail = null) => {
   try {
-    // Save to localStorage
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    // Save to localStorage with user-specific key
+    const storageKey = getStorageKey(userEmail)
+    localStorage.setItem(storageKey, JSON.stringify(data))
     
     // Also save to file (for browser download)
     const dataStr = JSON.stringify(data, null, 2)
@@ -21,9 +24,10 @@ export const saveData = (data) => {
   }
 }
 
-export const loadData = () => {
+export const loadData = (userEmail = null) => {
   try {
-    const data = localStorage.getItem(STORAGE_KEY)
+    const storageKey = getStorageKey(userEmail)
+    const data = localStorage.getItem(storageKey)
     if (data) {
       return JSON.parse(data)
     }
@@ -34,9 +38,9 @@ export const loadData = () => {
   }
 }
 
-export const exportData = () => {
+export const exportData = (userEmail = null) => {
   try {
-    const data = loadData()
+    const data = loadData(userEmail)
     const dataStr = JSON.stringify(data, null, 2)
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(dataBlob)
@@ -53,13 +57,13 @@ export const exportData = () => {
   }
 }
 
-export const importData = (file) => {
+export const importData = (file, userEmail = null) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result)
-        saveData(data)
+        saveData(data, userEmail)
         resolve(data)
       } catch (error) {
         reject(error)
