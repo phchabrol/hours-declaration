@@ -6,6 +6,7 @@ import { useAuth } from './auth/AuthContext'
 import Login from './auth/Login'
 import Signup from './auth/Signup'
 import AccountManagement from './auth/AccountManagement'
+import AdminDashboard from './admin/AdminDashboard'
 
 const EMPLOYEES = ['Meline', 'Cel']
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -14,6 +15,7 @@ function App() {
   const { user, loading } = useAuth()
   const [authView, setAuthView] = useState('login') // 'login' or 'signup'
   const [showAccount, setShowAccount] = useState(false)
+  const [showAdmin, setShowAdmin] = useState(false)
   const [selectedEmployee, setSelectedEmployee] = useState(null)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(null)
@@ -201,6 +203,24 @@ function App() {
     )
   }
 
+  // Show admin dashboard if requested
+  if (showAdmin) {
+    return (
+      <>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <button
+            className="save-button"
+            onClick={() => setShowAdmin(false)}
+            style={{ background: '#667eea' }}
+          >
+            ← Back to App
+          </button>
+        </div>
+        <AdminDashboard />
+      </>
+    )
+  }
+
   // Main app content
   return (
     <div className="app">
@@ -219,6 +239,13 @@ function App() {
                 title="Account Settings"
               >
                 ⚙️ Account
+              </button>
+              <button
+                className="admin-button"
+                onClick={() => setShowAdmin(true)}
+                title="Admin Dashboard"
+              >
+                👥 Admin
               </button>
             </div>
           </div>
