@@ -52,19 +52,19 @@ The built files will be in the `dist` directory.
 
 1. Build and start the container:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 2. Access the application at `http://localhost:3000`
 
 3. Stop the container:
 ```bash
-docker-compose down
+docker compose down
 ```
 
 4. Rebuild after code changes:
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ### Using Docker directly
