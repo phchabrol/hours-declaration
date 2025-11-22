@@ -1,0 +1,228 @@
+.app {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  margin: 20px 0;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #333;
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.employee-selector {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.employee-button {
+  padding: 12px 30px;
+  font-size: 1.1em;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.employee-button:hover {
+  background: #f0f0ff;
+  transform: translateY(-2px);
+}
+
+.employee-button.active {
+  background: #667eea;
+  color: white;
+}
+
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.month-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: all 0.3s ease;
+}
+
+.month-button:hover {
+  background: #5568d3;
+  transform: scale(1.05);
+}
+
+.month-display {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #333;
+  min-width: 200px;
+  text-align: center;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: 600;
+  color: #667eea;
+  padding: 10px;
+  font-size: 0.9em;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  position: relative;
+}
+
+.calendar-day:hover {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.calendar-day.other-month {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  border-color: #667eea;
+  background: #f0f0ff;
+}
+
+.calendar-day.has-hours {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.day-number {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.hours-display {
+  font-size: 0.75em;
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.hours-input-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.hours-input-section h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.hours-input-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hours-input {
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1em;
+  width: 120px;
+}
+
+.hours-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.save-button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.save-button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+.save-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.monthly-summary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.monthly-summary h2 {
+  margin-bottom: 15px;
+  font-size: 1.8em;
+}
+
+.total-hours {
+  font-size: 3em;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.summary-label {
+  font-size: 1.1em;
+  opacity: 0.9;
+}
+
+.no-employee-selected {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 1.2em;
+}
+
