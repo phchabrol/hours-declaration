@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from './AuthContext'
+import GoogleAuth from './GoogleAuth'
 import './Auth.css'
 
 function Login({ onSwitchToSignup }) {
@@ -7,7 +8,19 @@ function Login({ onSwitchToSignup }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
+  const { login, loginWithGoogle } = useAuth()
+
+  const handleGoogleSuccess = (googleUserData) => {
+    setError('')
+    const result = loginWithGoogle(googleUserData)
+    if (!result.success) {
+      setError(result.error)
+    }
+  }
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage || 'Google authentication failed')
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -64,6 +77,16 @@ function Login({ onSwitchToSignup }) {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        <GoogleAuth 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          buttonText="Sign in with Google"
+        />
 
         <div className="auth-switch">
           Don't have an account?{' '}

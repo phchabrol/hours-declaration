@@ -81,6 +81,10 @@ function AccountManagement() {
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
+      // If user logged in with Google, also sign out from Google
+      if (user?.authProvider === 'google' && window.google?.accounts) {
+        window.google.accounts.id.disableAutoSelect()
+      }
       logout()
     }
   }
@@ -127,8 +131,18 @@ function AccountManagement() {
                 disabled
                 className="disabled-input"
               />
-              <small>Email cannot be changed</small>
+              <small>
+                {user?.authProvider === 'google' 
+                  ? 'Email managed by Google account' 
+                  : 'Email cannot be changed'}
+              </small>
             </div>
+
+            {user?.authProvider === 'google' && (
+              <div className="auth-provider-badge">
+                <span>🔐 Authenticated with Google</span>
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="account-name">Full Name</label>
@@ -150,7 +164,14 @@ function AccountManagement() {
         )}
 
         {activeTab === 'password' && (
-          <form onSubmit={handlePasswordUpdate} className="auth-form">
+          <>
+            {user?.authProvider === 'google' ? (
+              <div className="google-password-info">
+                <p>You're signed in with Google. Password management is handled by your Google account.</p>
+                <p>To change your password, visit your <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer">Google Account settings</a>.</p>
+              </div>
+            ) : (
+              <form onSubmit={handlePasswordUpdate} className="auth-form">
             <div className="form-group">
               <label htmlFor="current-password">Current Password</label>
               <input
@@ -197,6 +218,8 @@ function AccountManagement() {
               {loading ? 'Updating...' : 'Update Password'}
             </button>
           </form>
+            )}
+          </>
         )}
 
         <div className="account-actions">

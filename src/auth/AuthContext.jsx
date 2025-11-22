@@ -68,6 +68,52 @@ export const AuthProvider = ({ children }) => {
     return { success: true }
   }
 
+  const loginWithGoogle = (googleUserData) => {
+    try {
+      const { email, name, picture, sub } = googleUserData
+      
+      // Store Google user info
+      const users = JSON.parse(localStorage.getItem('users') || '{}')
+      
+      // Check if user exists, if not create account
+      if (!users[email]) {
+        users[email] = {
+          email,
+          name,
+          picture,
+          googleId: sub,
+          authProvider: 'google',
+          createdAt: new Date().toISOString()
+        }
+        localStorage.setItem('users', JSON.stringify(users))
+      } else {
+        // Update existing user with Google info if needed
+        users[email] = {
+          ...users[email],
+          picture: picture || users[email].picture,
+          googleId: sub,
+          authProvider: 'google'
+        }
+        localStorage.setItem('users', JSON.stringify(users))
+      }
+      
+      // Set current user
+      const userData = { 
+        email, 
+        name, 
+        picture,
+        authProvider: 'google'
+      }
+      setUser(userData)
+      localStorage.setItem('auth_user', JSON.stringify(userData))
+      
+      return { success: true }
+    } catch (error) {
+      console.error('Error with Google login:', error)
+      return { success: false, error: 'Failed to authenticate with Google' }
+    }
+  }
+
   const logout = () => {
     setUser(null)
     localStorage.removeItem('auth_user')
@@ -114,6 +160,7 @@ export const AuthProvider = ({ children }) => {
     user,
     login,
     signup,
+    loginWithGoogle,
     logout,
     updateProfile,
     loading
