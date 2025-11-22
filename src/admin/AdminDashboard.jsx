@@ -157,11 +157,11 @@ function AdminDashboard() {
   const allUsers = getAllUsers()
 
   return (
-    <div className="admin-container" style={{ minHeight: '400px' }}>
+    <div className="admin-container" style={{ minHeight: '400px', backgroundColor: 'white', padding: '30px' }}>
       <div className="admin-header">
-        <h2>Admin Dashboard</h2>
-        <p>Manage and monitor all user accounts and their hours declarations</p>
-        <div className="admin-user-info">
+        <h2 style={{ color: '#333', fontSize: '2.5em', marginBottom: '10px' }}>Admin Dashboard</h2>
+        <p style={{ color: '#666', fontSize: '1.1em', marginBottom: '15px' }}>Manage and monitor all user accounts and their hours declarations</p>
+        <div className="admin-user-info" style={{ color: '#667eea', fontSize: '0.95em', padding: '10px', background: '#f0f0ff', borderRadius: '8px', display: 'inline-block' }}>
           Logged in as: <strong>{user?.name || 'Unknown'}</strong> ({user?.email || 'No email'})
         </div>
         <div style={{ marginTop: '10px', fontSize: '0.9em', color: '#666' }}>
