@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useAuth } from '../auth/AuthContext'
 import { loadData } from '../dataStorage'
 import './AdminDashboard.css'
@@ -7,6 +7,7 @@ function AdminDashboard() {
   const { user } = useAuth()
   const [selectedUser, setSelectedUser] = useState(null)
   const [viewMode, setViewMode] = useState('users') // 'users' or 'activity'
+  const [error, setError] = useState(null)
 
   // Get all users from localStorage
   const getAllUsers = () => {
@@ -32,6 +33,27 @@ function AdminDashboard() {
       console.error('Error loading user hours:', error)
       return {}
     }
+  }
+
+  // Get last activity date from hours data
+  const getLastActivityDate = (hoursData) => {
+    if (!hoursData || Object.keys(hoursData).length === 0) return null
+    let latestDate = null
+    Object.keys(hoursData).forEach(employee => {
+      Object.keys(hoursData[employee] || {}).forEach(dateStr => {
+        try {
+          const date = new Date(dateStr)
+          if (date && !isNaN(date.getTime())) {
+            if (!latestDate || date > latestDate) {
+              latestDate = date
+            }
+          }
+        } catch (e) {
+          // Skip invalid dates
+        }
+      })
+    })
+    return latestDate
   }
 
   // Get all users with their activity summary
@@ -63,19 +85,6 @@ function AdminDashboard() {
       }
     })
   }, [])
-
-  const getLastActivityDate = (hoursData) => {
-    let latestDate = null
-    Object.keys(hoursData).forEach(employee => {
-      Object.keys(hoursData[employee] || {}).forEach(dateStr => {
-        const date = new Date(dateStr)
-        if (!latestDate || date > latestDate) {
-          latestDate = date
-        }
-      })
-    })
-    return latestDate
-  }
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Never'
@@ -125,13 +134,38 @@ function AdminDashboard() {
 
   const selectedUserActivities = selectedUser ? getUserDetailedActivity(selectedUser.email) : []
 
+  // Debug: Log users
+  useEffect(() => {
+    const users = getAllUsers()
+    console.log('Admin Dashboard - Users found:', users)
+    console.log('Admin Dashboard - Users with activity:', usersWithActivity)
+  }, [usersWithActivity])
+
+  if (error) {
+    return (
+      <div className="admin-container">
+        <div className="admin-header">
+          <h2>Admin Dashboard</h2>
+          <div className="auth-error" style={{ marginTop: '20px' }}>
+            Error: {error}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const allUsers = getAllUsers()
+
   return (
-    <div className="admin-container">
+    <div className="admin-container" style={{ minHeight: '400px' }}>
       <div className="admin-header">
         <h2>Admin Dashboard</h2>
         <p>Manage and monitor all user accounts and their hours declarations</p>
         <div className="admin-user-info">
-          Logged in as: <strong>{user?.name}</strong> ({user?.email})
+          Logged in as: <strong>{user?.name || 'Unknown'}</strong> ({user?.email || 'No email'})
+        </div>
+        <div style={{ marginTop: '10px', fontSize: '0.9em', color: '#666' }}>
+          Total users in system: {allUsers.length}
         </div>
       </div>
 
