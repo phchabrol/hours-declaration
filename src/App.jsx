@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { saveData, loadData, exportData, importData } from './dataStorage'
+import HoursVisualization from './HoursVisualization'
 
 const EMPLOYEES = ['Meline', 'Cel']
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -11,6 +12,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(null)
   const [hoursInput, setHoursInput] = useState('')
   const [hoursData, setHoursData] = useState({})
+  const [currentView, setCurrentView] = useState('calendar') // 'calendar' or 'visualization'
   const fileInputRef = useRef(null)
 
   // Load data on mount
@@ -172,6 +174,21 @@ function App() {
         ))}
       </div>
 
+      <div className="view-tabs">
+        <button
+          className={`view-tab ${currentView === 'calendar' ? 'active' : ''}`}
+          onClick={() => setCurrentView('calendar')}
+        >
+          📅 Calendar
+        </button>
+        <button
+          className={`view-tab ${currentView === 'visualization' ? 'active' : ''}`}
+          onClick={() => setCurrentView('visualization')}
+        >
+          📊 Visualization
+        </button>
+      </div>
+
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <button
           className="save-button"
@@ -196,7 +213,13 @@ function App() {
         </button>
       </div>
 
-      {selectedEmployee ? (
+      {currentView === 'visualization' && (
+        <HoursVisualization hoursData={hoursData} employees={EMPLOYEES} />
+      )}
+
+      {currentView === 'calendar' && (
+        <>
+          {selectedEmployee ? (
         <>
           <div className="month-selector">
             <button className="month-button" onClick={handlePreviousMonth}>
@@ -297,10 +320,12 @@ function App() {
             <div className="summary-label">Total Hours in {monthName}</div>
           </div>
         </>
-      ) : (
-        <div className="no-employee-selected">
-          Please select an employee to start declaring hours
-        </div>
+          ) : (
+            <div className="no-employee-selected">
+              Please select an employee to start declaring hours
+            </div>
+          )}
+        </>
       )}
     </div>
   )

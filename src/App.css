@@ -226,3 +226,32 @@
   font-size: 1.2em;
 }
 
+.view-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.view-tab {
+  padding: 12px 30px;
+  font-size: 1.1em;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.view-tab:hover {
+  background: #f0f0ff;
+  transform: translateY(-2px);
+}
+
+.view-tab.active {
+  background: #667eea;
+  color: white;
+}
+
